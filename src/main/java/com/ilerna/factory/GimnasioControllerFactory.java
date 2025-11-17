@@ -8,6 +8,7 @@ import com.ilerna.service.AsistenciaService;
 import com.ilerna.service.ClaseService;
 import com.ilerna.service.ClienteService;
 import com.ilerna.service.DatabaseService;
+import com.ilerna.service.TransaccionService;
 
 import java.sql.Connection;
 
@@ -36,6 +37,7 @@ public class GimnasioControllerFactory {
         ClienteService clienteService = new ClienteService(clienteDAO);
         ClaseService claseService = new ClaseService(claseDAO);
         AsistenciaService asistenciaService = new AsistenciaService(asistenciaDAO);
+        TransaccionService transaccionService = new TransaccionService(connection);
         
         // Capa Controller - Presentación
         return new GimnasioController(
@@ -43,6 +45,7 @@ public class GimnasioControllerFactory {
             clienteService,
             claseService,
             asistenciaService,
+            transaccionService,
             scanner
         );
     }
