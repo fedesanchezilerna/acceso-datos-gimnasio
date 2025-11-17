@@ -51,12 +51,11 @@ public class App {
         do {
             System.out.println("SISTEMA DE GESTIÓN DE GIMNASIO");
             System.out.println("1. Mostrar versión de PostgreSQL");
-            System.out.println("2. Listar clases Crossfit o cupo > 25");
-            System.out.println("3. Mostrar reporte de clientes por clase");
-            System.out.println("4. Listar todos los clientes");
-            System.out.println("5. Insertar nuevo cliente");
-            System.out.println("6. Actualizar información de cliente");
-            System.out.println("7. Eliminar cliente");
+            System.out.println("2. Listar todos los clientes");
+            System.out.println("3. Insertar nuevo cliente");
+            System.out.println("4. Actualizar información de cliente");
+            System.out.println("5. Eliminar cliente");
+            System.out.println("6. [DEMO] Transacción: Registrar entrenador + clientes");
             System.out.println("0. Salir\n");
             System.out.print("Seleccione una opción: ");
 
@@ -71,22 +70,19 @@ public class App {
                         controller.mostrarVersionPostgresSQL();
                         break;
                     case 2:
-                        controller.listarClasesCrossfitOCupoMayor();
-                        break;
-                    case 3:
-                        controller.mostrarReporteClientesPorClase();
-                        break;
-                    case 4:
                         controller.listarClientes();
                         break;
-                    case 5:
+                    case 3:
                         controller.registrarNuevoCliente();
                         break;
-                    case 6:
-                        // TODO: Implementar actualización
+                    case 4:
+                        controller.actualizarCliente();
                         break;
-                    case 7:
+                    case 5:
                         // TODO: Implementar eliminación
+                        break;
+                    case 6:
+                        controller.registrarEntrenadorConClientesTransaccion();
                         break;
                     case 0:
                         System.out.println("Ta luego my friend");
