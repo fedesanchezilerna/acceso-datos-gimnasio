@@ -5,7 +5,7 @@ import com.ilerna.dto.ClaseConConteo;
 import com.ilerna.dto.Cliente;
 import com.ilerna.dto.Entrenador;
 import com.ilerna.service.AsistenciaService;
-import com.ilerna.service.TransaccionService;
+import com.ilerna.service.TransaccionDemoService;
 
 import java.util.Optional;
 import com.ilerna.service.ClaseService;
@@ -28,20 +28,20 @@ public class GimnasioController {
     private final ClienteService clienteService;
     private final ClaseService claseService;
     private final AsistenciaService asistenciaService;
-    private final TransaccionService transaccionService;
+    private final TransaccionDemoService transaccionDemoService;
     private final Scanner scanner;
 
     public GimnasioController(DatabaseService databaseService,
                               ClienteService clienteService,
                               ClaseService claseService,
                               AsistenciaService asistenciaService,
-                              TransaccionService transaccionService,
+                              TransaccionDemoService transaccionDemoService,
                               Scanner scanner) {
         this.databaseService = databaseService;
         this.clienteService = clienteService;
         this.claseService = claseService;
         this.asistenciaService = asistenciaService;
-        this.transaccionService = transaccionService;
+        this.transaccionDemoService = transaccionDemoService;
         this.scanner = scanner;
     }
 
@@ -293,9 +293,9 @@ public class GimnasioController {
             }
             
             System.out.println("\n==================================================");
-            
+
             // Ejecutar la transacción
-            transaccionService.registrarEntrenadorConClientes(entrenador, clientes);
+            transaccionDemoService.registrarEntrenadorConClientes(entrenador, clientes);
             
         } catch (SQLException e) {
             System.out.println("\nLa transacción falló y se revirtieron todos los cambios.");

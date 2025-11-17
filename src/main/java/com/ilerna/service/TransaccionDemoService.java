@@ -14,13 +14,13 @@ import java.util.List;
  * Servicio que gestiona transacciones complejas
  * Demuestra el uso de transacciones con commit y rollback
  */
-public class TransaccionService {
+public class TransaccionDemoService {
     
     private final Connection connection;
     private final EntrenadorDAO entrenadorDAO;
     private final ClienteDAO clienteDAO;
 
-    public TransaccionService(Connection connection) {
+    public TransaccionDemoService(Connection connection) {
         this.connection = connection;
         this.entrenadorDAO = new EntrenadorDAO(connection);
         this.clienteDAO = new ClienteDAO(connection);
