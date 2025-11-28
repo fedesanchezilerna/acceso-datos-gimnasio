@@ -5,8 +5,8 @@ import com.ilerna.dao.EntrenadorDAO;
 import com.ilerna.dto.Cliente;
 import com.ilerna.dto.Entrenador;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -162,20 +162,18 @@ public class TransaccionDemoService {
 
             String sql = "CALL insertar_entrenador_y_clase(?, ?, ?, ?)";
             
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            try (CallableStatement cs = connection.prepareCall(sql)) {
                 // Establecer los parámetros
-                pstmt.setString(1, nombreEntrenador);
-                pstmt.setString(2, especialidad);
-                pstmt.setString(3, nombreClase);
-                pstmt.setInt(4, cupoMaximo);
+                cs.setString(1, nombreEntrenador);
+                cs.setString(2, especialidad);
+                cs.setString(3, nombreClase);
+                cs.setInt(4, cupoMaximo);
                 
                 // Ejecutar el procedimiento
-                pstmt.execute();
-                
-                // Si todo fue exitoso, hacer commit
+                cs.execute();
+
                 connection.commit();
                 System.out.println("Procedimiento ejecutado correctamente");
-                System.out.println("COMMIT realizado");
                 
             } catch (SQLException e) {
                 System.out.println("Error al ejecutar el procedimiento: " + e.getMessage());
