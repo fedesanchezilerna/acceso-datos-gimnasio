@@ -6,6 +6,7 @@ import com.ilerna.dto.Cliente;
 import com.ilerna.dto.Entrenador;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +131,76 @@ public class TransaccionDemoService {
         }
         
         return resultado;
+    }
+
+    /**
+     * Ejecuta el procedimiento almacenado insertar_entrenador_y_clase
+     * El procedimiento maneja su propia transacción internamente
+     * 
+     * @param nombreEntrenador Nombre del entrenador
+     * @param especialidad Especialidad del entrenador
+     * @param nombreClase Nombre de la clase
+     * @param cupoMaximo Cupo máximo de la clase
+     * @throws SQLException Si hay error al ejecutar el procedimiento
+     */
+    public void ejecutarProcedimientoInsertarEntrenadorYClase(
+            String nombreEntrenador, 
+            String especialidad,
+            String nombreClase, 
+            int cupoMaximo) throws SQLException {
+        
+        // Guardar el estado original del autoCommit
+        boolean autoCommitOriginal = connection.getAutoCommit();
+        
+        try {
+            // Deshabilitar autoCommit para manejar la transacción manualmente
+            connection.setAutoCommit(false);
+            
+            System.out.println("=== EJECUTANDO PROCEDIMIENTO ALMACENADO ===");
+            System.out.println("Entrenador: " + nombreEntrenador + " (" + especialidad + ")");
+            System.out.println("Clase: " + nombreClase + " (Cupo: " + cupoMaximo + ")");
+
+            String sql = "CALL insertar_entrenador_y_clase(?, ?, ?, ?)";
+            
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                // Establecer los parámetros
+                pstmt.setString(1, nombreEntrenador);
+                pstmt.setString(2, especialidad);
+                pstmt.setString(3, nombreClase);
+                pstmt.setInt(4, cupoMaximo);
+                
+                // Ejecutar el procedimiento
+                pstmt.execute();
+                
+                // Si todo fue exitoso, hacer commit
+                connection.commit();
+                System.out.println("Procedimiento ejecutado correctamente");
+                System.out.println("COMMIT realizado");
+                
+            } catch (SQLException e) {
+                System.out.println("Error al ejecutar el procedimiento: " + e.getMessage());
+                System.out.println("Ejecutando ROLLBACK...");
+                
+                try {
+                    connection.rollback();
+                    System.out.println("ROLLBACK completado");
+                } catch (SQLException rollbackEx) {
+                    System.out.println("Error al hacer rollback: " + rollbackEx.getMessage());
+                    throw rollbackEx;
+                }
+                
+                throw e;
+            }
+            
+        } finally {
+            // Restaurar el autoCommit original
+            try {
+                connection.setAutoCommit(autoCommitOriginal);
+                System.out.println("=== PROCEDIMIENTO FINALIZADO ===\n");
+            } catch (SQLException e) {
+                System.out.println("Error al restaurar autoCommit: " + e.getMessage());
+            }
+        }
     }
 
     /**

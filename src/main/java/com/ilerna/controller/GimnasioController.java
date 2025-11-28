@@ -303,4 +303,46 @@ public class GimnasioController {
             System.out.println("✗ Error inesperado: " + e.getMessage());
         }
     }
+
+    /**
+     * Ejecuta el procedimiento almacenado insertar_entrenador_y_clase
+     * Solicita los datos al usuario y ejecuta el procedimiento
+     */
+    public void ejecutarProcedimientoInsertarEntrenadorYClase() {
+        System.out.println("=== EJECUTAR PROCEDIMIENTO ALMACENADO ===");
+        System.out.println("Procedimiento: insertar_entrenador_y_clase\n");
+        
+        try {
+            System.out.println("--- Datos del Entrenador ---");
+            System.out.print("Nombre del entrenador: ");
+            String nombreEntrenador = scanner.nextLine();
+            
+            System.out.print("Especialidad: ");
+            String especialidad = scanner.nextLine();
+            
+            System.out.println("\n--- Datos de la Clase ---");
+            System.out.print("Nombre de la clase: ");
+            String nombreClase = scanner.nextLine();
+            
+            System.out.print("Cupo máximo: ");
+            int cupoMaximo = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
+            
+            System.out.println("\n==================================================");
+            
+            // Ejecutar el procedimiento almacenado
+            transaccionDemoService.ejecutarProcedimientoInsertarEntrenadorYClase(
+                nombreEntrenador, 
+                especialidad, 
+                nombreClase, 
+                cupoMaximo
+            );
+            
+        } catch (SQLException e) {
+            System.out.println("\nEl procedimiento falló y se revirtieron todos los cambios.");
+        } catch (Exception e) {
+            System.out.println("✗ Error inesperado: " + e.getMessage());
+            scanner.nextLine(); // Limpiar buffer en caso de error
+        }
+    }
 }

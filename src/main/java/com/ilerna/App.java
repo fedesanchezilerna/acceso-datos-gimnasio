@@ -56,6 +56,7 @@ public class App {
             System.out.println("4. Actualizar información de cliente");
             System.out.println("5. Eliminar cliente");
             System.out.println("6. [DEMO] Transacción: Registrar entrenador + clientes");
+            System.out.println("7. [STORED PROC] Insertar entrenador y clase");
             System.out.println("0. Salir\n");
             System.out.print("Seleccione una opción: ");
 
@@ -83,6 +84,9 @@ public class App {
                         break;
                     case 6:
                         controller.registrarEntrenadorConClientesTransaccion();
+                        break;
+                    case 7:
+                        controller.ejecutarProcedimientoInsertarEntrenadorYClase();
                         break;
                     case 0:
                         System.out.println("Ta luego my friend");
