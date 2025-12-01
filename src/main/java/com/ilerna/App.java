@@ -4,23 +4,98 @@ import java.sql.*;
 import java.util.Scanner;
 
 import com.ilerna.config.DataBaseConnection;
+import com.ilerna.config.HibernateUtil;
 import com.ilerna.controller.GimnasioController;
+import com.ilerna.entity.Cliente;
 import com.ilerna.factory.GimnasioControllerFactory;
+import com.ilerna.service.HibernateEjemploService;
 
 /**
  * <p>Clase principal de la aplicación<p/>
  * Implementa arquitectura por capas con Clean Architecture
  * 
  * Estructura:
+ * - Entity: Entidades JPA (mapeo ORM con Hibernate)
  * - DTO: Objetos de transferencia de datos
  * - DAO: Capa de acceso a datos
  * - Service: Lógica de negocio
  * - Controller: Lógica de presentación
  * - Factory: Creación de objetos complejos
+ * - Config: Configuración (DB, Hibernate)
  * - App: Punto de entrada (main)
  */
 public class App {
     public static void main(String[] args) {
+        // Demostración de Hibernate
+        ejemploHibernate();
+        
+        // Sistema JDBC original
+        sistemaJDBC();
+    }
+
+    /**
+     * Ejemplo básico de uso de Hibernate
+     */
+    private static void ejemploHibernate() {
+        System.out.println("=== DEMO DE HIBERNATE ===\n");
+        
+        HibernateEjemploService service = new HibernateEjemploService();
+        
+        // 1. Insertar un cliente con timestamp para evitar duplicados
+        System.out.println("1. Insertando cliente...");
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String uniqueTimestamp = timestamp.substring(timestamp.length() - 6);
+        service.insertarCliente(
+            "Cliente Hibernate " + uniqueTimestamp,
+                "hibernate" + uniqueTimestamp + "@example.com",
+                "999" + uniqueTimestamp
+        );
+        
+        // 2. Consultar cliente por ID
+        System.out.println("\n2. Consultando cliente con ID 1...");
+        service.consultarClientePorId(1);
+        
+        // 3. Actualizar cliente (solo si existe)
+        System.out.println("\n3. Actualizando email del cliente con ID 1...");
+        service.actualizarCliente(1, "cliente.actualizado@example.com");
+        
+        // Verificar actualización
+        System.out.println("\n4. Verificando actualización del cliente con ID 1...");
+        service.consultarClientePorId(1);
+        
+        // 5. DEMO merge(): Insertar cliente nuevo sin ID
+        System.out.println("\n5. DEMO merge() - Insertando cliente nuevo (sin ID)...");
+        Cliente clienteNuevo = new Cliente(
+            "Cliente Merge Nuevo",
+            "merge.nuevo" + uniqueTimestamp + "@example.com",
+            "888" + uniqueTimestamp
+        );
+        service.guardarOActualizarCliente(clienteNuevo);
+        
+        // 6. DEMO merge(): Actualizar cliente existente con ID
+        System.out.println("\n6. DEMO merge() - Actualizando cliente existente (con ID)...");
+        Cliente clienteExistente = new Cliente(
+            1,
+            "juan pérez MODIFICADO con merge",
+            "cliente.merge.modificado@example.com",
+            "123456789"
+        );
+        service.guardarOActualizarCliente(clienteExistente);
+        
+        // Verificar la actualización con merge
+        System.out.println("\n7. Verificando cliente actualizado con merge...");
+        service.consultarClientePorId(1);
+        
+        System.out.println("\n=== FIN DEMO HIBERNATE ===\n");
+        
+        // Cerrar SessionFactory
+        HibernateUtil.shutdown();
+    }
+
+    /**
+     * Sistema original con JDBC
+     */
+    private static void sistemaJDBC() {
         try (Connection connection = DataBaseConnection.getConnection();
                 Scanner scanner = new Scanner(System.in)) {
 
