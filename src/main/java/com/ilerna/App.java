@@ -10,6 +10,7 @@ import com.ilerna.entity.Cliente;
 import com.ilerna.factory.GimnasioControllerFactory;
 import com.ilerna.service.AsistenciaHibernateService;
 import com.ilerna.service.HibernateEjemploService;
+import com.ilerna.service.ObjetoRelacionalService;
 
 import java.time.LocalDate;
 
@@ -29,13 +30,87 @@ import java.time.LocalDate;
  */
 public class App {
     public static void main(String[] args) {
+        // Demostración de Base de Datos Objeto-Relacional
+        ejemploObjetoRelacional();
+        
         // Demostración de Hibernate
-        ejemploHibernate();
+        // NOTA: Requiere Java 17+ (Hibernate 6.x está compilado con Java 17)
+        // Si usas Java 8, comenta esta línea o actualiza a una versión compatible de Hibernate
+        // ejemploHibernate();
         
         // Sistema JDBC original
         sistemaJDBC();
     }
 
+    /**
+     * Ejemplo de Base de Datos Objeto-Relacional
+     * Demuestra tipos compuestos (composite types) de PostgreSQL
+     */
+    private static void ejemploObjetoRelacional() {
+        System.out.println("╔═══════════════════════════════════════════════════╗");
+        System.out.println("║   DEMO: BASE DE DATOS OBJETO-RELACIONAL           ║");
+        System.out.println("║   Tipos Compuestos (Composite Types)              ║");
+        System.out.println("╚═══════════════════════════════════════════════════╝\n");
+        
+        try (Connection connection = DataBaseConnection.getConnection()) {
+            
+            if (connection == null) {
+                System.out.println("✗ Error: No se pudo establecer conexión con la base de datos\n");
+                return;
+            }
+            
+            ObjetoRelacionalService service = new ObjetoRelacionalService(connection);
+            
+            // 1. Crear estructura (tipo compuesto + tabla)
+            service.crearEstructuraObjetoRelacional();
+            
+            // 2. Mostrar información del tipo compuesto
+            service.mostrarInfoTipoCompuesto();
+            
+            // 3. Insertar entrenadores usando la notación ROW
+            System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            service.insertarEntrenador("Karloz", "Fuerza");
+            service.insertarEntrenador("Ana García", "Yoga");
+            service.insertarEntrenador("Miguel Torres", "Cardio");
+            service.insertarEntrenador("Laura Martínez", "Pilates");
+            service.insertarEntrenador("Pedro Sánchez", "Fuerza");
+            
+            // 4. Consultar todos los entrenadores
+            System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            service.consultarEntrenadores();
+            
+            // 5. Consultar por especialidad
+            System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            service.consultarPorEspecialidad("Fuerza");
+            
+            // 6. Actualizar un entrenador
+            System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            service.actualizarEntrenador(1, "Carlos 'Karloz' Rodríguez", "Fuerza Avanzada");
+            
+            // 7. Verificar la actualización
+            service.consultarEntrenadores();
+            
+            // 8. Eliminar un entrenador
+            System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            service.eliminarEntrenador(3);
+            
+            // 9. Consultar estado final
+            service.consultarEntrenadores();
+            
+            // 10. Limpiar estructuras (opcional - comentar si quieres mantener las tablas)
+            // service.limpiarEstructuras();
+            
+            System.out.println("╔═══════════════════════════════════════════════════╗");
+            System.out.println("║   FIN DEMO OBJETO-RELACIONAL                     ║");
+            System.out.println("╚═══════════════════════════════════════════════════╝\n");
+            
+        } catch (SQLException e) {
+            System.out.println("✗ Error en la demostración objeto-relacional:");
+            e.printStackTrace();
+            System.out.println();
+        }
+    }
+    
     /**
      * Ejemplo básico de uso de Hibernate
      */
