@@ -20,5 +20,6 @@
         <mapping class="com.ilerna.entity.Cliente"/>
         <mapping class="com.ilerna.entity.Entrenador"/>
         <mapping class="com.ilerna.entity.Clase"/>
+        <mapping class="com.ilerna.entity.Asistencia"/>
     </session-factory>
 </hibernate-configuration>

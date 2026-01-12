@@ -8,7 +8,10 @@ import com.ilerna.config.HibernateUtil;
 import com.ilerna.controller.GimnasioController;
 import com.ilerna.entity.Cliente;
 import com.ilerna.factory.GimnasioControllerFactory;
+import com.ilerna.service.AsistenciaHibernateService;
 import com.ilerna.service.HibernateEjemploService;
+
+import java.time.LocalDate;
 
 /**
  * <p>Clase principal de la aplicación<p/>
@@ -85,6 +88,22 @@ public class App {
         // Verificar la actualización con merge
         System.out.println("\n7. Verificando cliente actualizado con merge...");
         service.consultarClientePorId(1);
+        
+        // 8. DEMO EAGER vs LAZY Loading
+        System.out.println("\n8. DEMO EAGER vs LAZY Loading con Asistencias...");
+        AsistenciaHibernateService asistenciaService = new AsistenciaHibernateService();
+        
+        // Insertar una asistencia de ejemplo
+        System.out.println("\n8.1. Insertando asistencia de ejemplo...");
+        asistenciaService.insertarAsistencia(1, 1, LocalDate.now());
+        
+        // Demostrar EAGER loading (problema con sesión cerrada)
+        System.out.println("\n8.2. EAGER vs LAZY con sesión cerrada...");
+        asistenciaService.demostrarEagerLoading(1);
+        
+        // Demostrar LAZY loading correcto (dentro de sesión)
+        System.out.println("\n8.3. Usando LAZY correctamente (dentro de sesión)...");
+        asistenciaService.demostrarLazyLoadingCorrecto(1);
         
         System.out.println("\n=== FIN DEMO HIBERNATE ===\n");
         
